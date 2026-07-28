@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ERMV: Action-Aligned 4D Robot-Trajectory Editing</title>
+  <meta name="title" content="ERMV: Action-Aligned 4D Robot-Trajectory Editing with State-Conditioned Epipolar Motion Kernels">
+  <meta name="description" content="ERMV edits synchronized multi-view robot trajectories while preserving temporal, geometric, and action consistency for robust policy learning.">
+  <meta name="keywords" content="robot learning, video editing, multi-view diffusion, action-conditioned generation, data augmentation, embodied AI">
+  <meta name="author" content="Chang Nie, Tianchen Deng, Guangming Wang, Zhe Liu, Hesheng Wang">
+  <meta name="robots" content="index, follow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#214f7b">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; connect-src 'none'; font-src 'self' data:; frame-src 'none'; img-src 'self' data:; media-src 'self'; object-src 'none'; script-src 'self'; style-src 'self'; form-action 'none'; upgrade-insecure-requests">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ERMV Project">
+  <meta property="og:title" content="ERMV: Action-Aligned 4D Robot-Trajectory Editing">
+  <meta property="og:description" content="Action-aligned editing of synchronized multi-view robot trajectories for visually robust policy learning.">
+  <meta property="og:url" content="https://ermv.irmv.top/">
+  <meta property="og:image" content="https://ermv.irmv.top/static/images/overview.png">
+  <meta property="og:image:width" content="1285">
+  <meta property="og:image:height" content="592">
+  <meta property="og:image:alt" content="Overview of the ERMV robot-trajectory editing framework">
+  <meta property="article:section" content="Robotics">
+  <meta property="article:tag" content="Robot Learning">
+  <meta property="article:tag" content="Multi-view Video Editing">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ERMV: Action-Aligned 4D Robot-Trajectory Editing">
+  <meta name="twitter:description" content="Editing synchronized robot trajectories while preserving time, view, and action structure.">
+  <meta name="twitter:image" content="https://ermv.irmv.top/static/images/overview.png">
+
+  <meta name="citation_title" content="ERMV: Action-Aligned 4D Robot-Trajectory Editing with State-Conditioned Epipolar Motion Kernels">
+  <meta name="citation_author" content="Nie, Chang">
+  <meta name="citation_author" content="Deng, Tianchen">
+  <meta name="citation_author" content="Wang, Guangming">
+  <meta name="citation_author" content="Liu, Zhe">
+  <meta name="citation_author" content="Wang, Hesheng">
+  <meta name="citation_publication_date" content="2025">
+  <meta name="citation_arxiv_id" content="2507.17462">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2507.17462">
+
+  <link rel="canonical" href="https://ermv.irmv.top/">
+  <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="static/css/index.css">
+  <script defer src="static/js/index.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "ERMV: Action-Aligned 4D Robot-Trajectory Editing with State-Conditioned Epipolar Motion Kernels",
+    "description": "ERMV is an action-aligned diffusion editor for synchronized multi-view robot trajectories.",
+    "author": [
+      {"@type": "Person", "name": "Chang Nie"},
+      {"@type": "Person", "name": "Tianchen Deng"},
+      {"@type": "Person", "name": "Guangming Wang"},
+      {"@type": "Person", "name": "Zhe Liu"},
+      {"@type": "Person", "name": "Hesheng Wang"}
+    ],
+    "dateCreated": "2025-07-23",
+    "dateModified": "2026-07-28",
+    "creativeWorkStatus": "Preprint",
+    "url": "https://ermv.irmv.top/",
+    "sameAs": "https://arxiv.org/abs/2507.17462",
+    "image": "https://ermv.irmv.top/static/images/overview.png",
+    "keywords": ["robot learning", "multi-view video editing", "action-conditioned diffusion", "data augmentation"]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="ERMV home">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        <span>ERMV</span>
+      </a>
+      <div class="nav-links">
+        <a href="#abstract">Abstract</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#videos">Videos</a>
+        <a href="#citation">Citation</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" id="top">
+      <div class="hero-glow hero-glow-one" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-two" aria-hidden="true"></div>
+      <div class="container hero-content">
+        <p class="eyebrow">Robot learning · Multi-view video editing</p>
+        <h1>
+          <span class="title-acronym">ERMV:</span>
+          Action-Aligned 4D Robot-Trajectory Editing with State-Conditioned Epipolar Motion Kernels
+        </h1>
+
+        <div class="authors">
+          <span>Chang Nie<sup>1,2</sup></span>
+          <span>Tianchen Deng<sup>1,2</sup></span>
+          <span>Guangming Wang<sup>3</sup></span>
+          <span>Zhe Liu<sup>1,2</sup></span>
+          <span>Hesheng Wang<sup>1,2</sup></span>
+        </div>
+        <div class="affiliations">
+          <span><sup>1</sup>Shanghai Jiao Tong University</span>
+          <span><sup>2</sup>Shanghai Key Laboratory of Navigation and Location Based Services</span>
+          <span><sup>3</sup>University of Cambridge</span>
+        </div>
+
+        <div class="status-pill">
+          <span class="status-dot" aria-hidden="true"></span>
+          Project page · Preprint
+        </div>
+
+        <div class="resource-links">
+          <a class="button button-primary" href="https://arxiv.org/pdf/2507.17462" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6zM14 3.5V7h3.5M9 13h6M9 17h6M9 9h2"/></svg>
+            Paper
+          </a>
+          <a class="button" href="https://arxiv.org/abs/2507.17462" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 0v14h12M9 8h6M9 12h6"/></svg>
+            arXiv
+          </a>
+          <a class="button" href="https://github.com/IRMVLab/ERMV" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.87c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.82a9.6 9.6 0 0 1 2.5.34c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86V21c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+            Code
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="teaser section-tight">
+      <div class="container">
+        <figure class="figure-card overview-figure">
+          <img src="static/images/overview.png" width="1285" height="592" alt="ERMV turns an observed synchronized multi-view robot trajectory into an edited trajectory using sparse context selection, epipolar exchange, and autonomous feedback.">
+          <figcaption>
+            ERMV propagates an edited visual condition through an observed 4D robot trajectory while retaining synchronized views and the recorded state–action structure.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="abstract">
+      <div class="container reading-width">
+        <div class="section-heading">
+          <p class="section-kicker">Overview</p>
+          <h2>Abstract</h2>
+        </div>
+        <div class="abstract-copy">
+          <p>
+            Robot policies learn from multi-view image trajectories paired with actions, yet collecting demonstrations across diverse visual conditions remains expensive. Visual edits that preserve robot and object geometry, motion, and action labels can expand demonstration datasets without additional collection.
+          </p>
+          <p>
+            We introduce <strong>Editing Robot Multi-View trajectories (ERMV)</strong>, a diffusion editor that jointly processes the observed 4D trajectory as a time–view grid and conditions explicitly on recorded state and action. A Sparse Spatio-Temporal selector allocates compact long-range context, Epipolar Motion-Aware Attention aligns synchronized views through state- and action-conditioned supports, and an autonomous feedback cascade prevents task-critical errors from propagating through autoregressive memory.
+          </p>
+          <p>
+            Experiments span simulation, real-world recordings, physical Franka Panda deployment, sim-to-real transfer, and five policy families. The results show that visual diversity is most useful when it remains tied to the demonstrated interaction.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="method">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Approach</p>
+          <h2>Editing around the action, not around a plausible video</h2>
+          <p class="section-lead">
+            ERMV organizes diffusion around the structure already present in a robot demonstration: time, synchronized camera views, robot state, and action.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <span class="feature-index">01</span>
+            <h3>Sparse long-range context</h3>
+            <p>SST retains informative observations across long trajectories under a compact attention budget, helping recover appearance and identity after motion or occlusion.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-index">02</span>
+            <h3>Motion-aware view exchange</h3>
+            <p>EMA-Attn couples synchronized cameras through localized epipolar supports modulated by the recorded motion, while preserving self evidence when another view is unreliable.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-index">03</span>
+            <h3>Autonomous feedback</h3>
+            <p>Trajectory diagnostics guide acceptance, regeneration, or local correction before an edited segment becomes context for subsequent windows—without human intervention.</p>
+          </article>
+        </div>
+
+        <figure class="figure-card pipeline-figure">
+          <img src="static/images/pipeline.png" width="1273" height="656" loading="lazy" alt="Detailed ERMV pipeline with visual anchor conditioning, robotic and camera state-action injection, sparse spatio-temporal context, epipolar motion-aware attention, and autonomous feedback.">
+          <figcaption>
+            The visual anchor specifies the desired appearance; the source trajectory and state–action stream constrain how that edit evolves across time and views.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="results">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Evaluation</p>
+          <h2>Trajectory-consistent edits improve downstream robustness</h2>
+          <p class="section-lead">
+            ERMV is evaluated as both a video editor and a data engine: edited trajectories should look different, preserve the demonstrated interaction, and make policies more robust to visual shift.
+          </p>
+        </div>
+
+        <div class="result-grid">
+          <article class="result-card">
+            <strong>5</strong>
+            <span>policy families</span>
+            <p>Consistent downstream evaluation across conventional policies, VLA models, and a world–action model.</p>
+          </article>
+          <article class="result-card result-card-accent">
+            <strong>+11.6–17.8</strong>
+            <span>percentage points</span>
+            <p>Success improvement under visual shifts over source-only training across the five policy families.</p>
+          </article>
+          <article class="result-card">
+            <strong>Sim + real</strong>
+            <span>closed-loop validation</span>
+            <p>Evaluation includes physical cup-to-plate placement and sim-to-real deployment, beyond visual metrics alone.</p>
+          </article>
+        </div>
+
+        <div class="video-feature">
+          <div class="video-feature-copy">
+            <p class="section-kicker">Simulation editing</p>
+            <h3>Synchronized variation across four cameras</h3>
+            <p>
+              The top row shows the source observations and the bottom row shows the corresponding ERMV edit. The appearance changes across all views while robot motion and scene correspondence remain aligned.
+            </p>
+          </div>
+          <figure class="video-frame">
+            <video controls muted playsinline preload="metadata" poster="static/posters/simulation_multiview.jpg" aria-label="Four-view simulation source trajectory and corresponding ERMV edit">
+              <source src="static/videos/simulation_multiview.mp4" type="video/mp4">
+              Your browser does not support HTML video.
+            </video>
+            <figcaption>Source and ERMV outputs are synchronized at each timestep across head, front, left, and right cameras.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="videos">
+      <div class="container">
+        <div class="section-heading section-heading-light">
+          <p class="section-kicker">Qualitative comparisons</p>
+          <h2>Strong video priors are not action supervision</h2>
+          <p class="section-lead">
+            The tested image-to-video systems receive the edited first frame and a text description. They can synthesize visually compelling clips, but their interfaces do not receive the recorded robot actions or companion camera streams available to ERMV.
+          </p>
+        </div>
+
+        <div class="baseline-grid">
+          <figure class="video-card">
+            <video controls muted playsinline preload="none" poster="static/posters/grok-imagine.jpg" aria-label="Grok Imagine Video 1.5 image-to-video comparison">
+              <source src="static/videos/grok-imagine.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Grok Imagine Video 1.5</strong><span>Edited first frame + text</span></figcaption>
+          </figure>
+          <figure class="video-card">
+            <video controls muted playsinline preload="none" poster="static/posters/seedance.jpg" aria-label="Seedance 2.0 image-to-video comparison">
+              <source src="static/videos/seedance.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Seedance 2.0</strong><span>Edited first frame + text</span></figcaption>
+          </figure>
+          <figure class="video-card">
+            <video controls muted playsinline preload="none" poster="static/posters/veo.jpg" aria-label="Veo 3.1 image-to-video comparison">
+              <source src="static/videos/veo.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Veo 3.1</strong><span>Edited first frame + text</span></figcaption>
+          </figure>
+          <figure class="video-card">
+            <video controls muted playsinline preload="none" poster="static/posters/kling.jpg" aria-label="Kling AI 3.0 image-to-video comparison">
+              <source src="static/videos/kling.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Kling AI 3.0</strong><span>Edited first frame + text</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="robot">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Physical deployment</p>
+          <h2>Franka Panda cup-to-plate placement</h2>
+          <p class="section-lead">
+            ACT is trained either without augmentation or with ERMV-augmented trajectories, then evaluated on the same cup-to-plate objective in the seen setup and an unseen cluttered setup.
+          </p>
+        </div>
+
+        <div class="robot-grid">
+          <figure class="video-card video-card-light">
+            <video controls muted playsinline preload="none" poster="static/posters/physical-seen-source.jpg" aria-label="ACT without augmentation in the seen setup">
+              <source src="static/videos/physical-seen-source.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Seen setup</strong><span>ACT · no augmentation</span></figcaption>
+          </figure>
+          <figure class="video-card video-card-light">
+            <video controls muted playsinline preload="none" poster="static/posters/physical-seen-ermv.jpg" aria-label="ACT with ERMV augmentation in the seen setup">
+              <source src="static/videos/physical-seen-ermv.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Seen setup</strong><span>ACT · ERMV augmentation</span></figcaption>
+          </figure>
+          <figure class="video-card video-card-light">
+            <video controls muted playsinline preload="none" poster="static/posters/physical-clutter-source.jpg" aria-label="ACT without augmentation in an unseen cluttered setup">
+              <source src="static/videos/physical-clutter-source.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Unseen cluttered setup</strong><span>ACT · no augmentation</span></figcaption>
+          </figure>
+          <figure class="video-card video-card-light">
+            <video controls muted playsinline preload="none" poster="static/posters/physical-clutter-ermv.jpg" aria-label="ACT with ERMV augmentation in an unseen cluttered setup">
+              <source src="static/videos/physical-clutter-ermv.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Unseen cluttered setup</strong><span>ACT · ERMV augmentation</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="citation">
+      <div class="container reading-width">
+        <div class="section-heading">
+          <p class="section-kicker">Reference</p>
+          <h2>Citation</h2>
+        </div>
+        <div class="citation-box">
+          <button class="copy-button" type="button" data-copy-target="bibtex-code" aria-live="polite">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 8h10v12H9zM5 16H4V4h10v1"/></svg>
+            <span>Copy BibTeX</span>
+          </button>
+          <pre id="bibtex-code" tabindex="0" aria-label="BibTeX citation"><code>@article{nie2025ermv,
+  title   = {ERMV: Action-Aligned 4D Robot-Trajectory Editing with
+             State-Conditioned Epipolar Motion Kernels},
+  author  = {Nie, Chang and Deng, Tianchen and Wang, Guangming and
+             Liu, Zhe and Wang, Hesheng},
+  journal = {arXiv preprint arXiv:2507.17462},
+  year    = {2025}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <strong>ERMV</strong>
+        <p>Action-aligned 4D robot-trajectory editing.</p>
+      </div>
+      <p>
+        Page design adapted from the
+        <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener noreferrer">Academic Project Page Template</a>
+        and the <a href="https://hear.irmv.top/" target="_blank" rel="noopener noreferrer">HEAR project page</a>.
+      </p>
+    </div>
+  </footer>
+
+  <button class="scroll-top" type="button" aria-label="Scroll to top" title="Scroll to top">
+    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></svg>
+  </button>
+</body>
+</html>
